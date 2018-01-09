@@ -16,6 +16,11 @@ public class CameraController : MonoBehaviour {
 	public float currentZoom = 5f;
 	private float currentYaw = 0f;
 
+	Vector3 forward;
+
+	void Start(){
+		Time.timeScale = 1;
+	}
 	void Update(){
 		//zoom in/out
 		currentZoom -= Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
@@ -26,9 +31,23 @@ public class CameraController : MonoBehaviour {
 	}
 
 	void LateUpdate(){
+		FocusPlayer ();
+		//look around 
+		if(Input.GetButton("Horizontal")){
+			transform.RotateAround (target.position, Vector3.up, currentYaw);
+		}
+		if(Input.GetButtonUp("Horizontal")){
+			currentYaw = 0f;
+		}
+	}
+
+	void FocusPlayer(){
+		//camera always keep the player in the middle
 		transform.position = target.position - offset * currentZoom;
 		transform.LookAt (target.position + Vector3.up * pitch);
-
-		transform.RotateAround (target.position, Vector3.up, currentYaw);
+		//keep camera always look at the player's back
+		forward = target.transform.forward;
+		forward.y = 0;
+		transform.RotateAround (target.position, Vector3.up, Quaternion.LookRotation(forward).eulerAngles.y);
 	}
 }

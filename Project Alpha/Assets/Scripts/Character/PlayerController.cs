@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
 	Camera cam;
 	PlayerMotor motor;
 	public Transform canvas;
+
 	// Use this for initialization
 	void Start () {
 		cam = Camera.main;
